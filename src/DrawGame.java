@@ -5,24 +5,52 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DrawGame extends JFrame{
-    public  final JButton[][] gridPos;
+public class DrawGame extends JFrame implements Runnable {
+    public        JButton[][] gridPos;
     public  final Container   screen;
-    private       JButton     restartGame;
-    private       JButton     newGame;
-    private       JButton[]   ship;
-    private       JComboBox   selector;
-    private       JTextField  score;
-    private       JLabel[]    HLabel;
-    private       JLabel[]    VLabel;
+    public       JButton     restartGame;
+    public       JButton     newGame;
+    public       JButton[]   ship;
+    public       JComboBox   selector;
+    public       JTextField  score;
+    public       JLabel[]    HLabel;
+    public       JLabel[]    VLabel;
 
-
-    Font defaultFont = new Font("IBM 3270",Font.PLAIN, 12);
-    Color Gunmetal = new Color(32,44,57);
-    Color Charcoal = new Color(40,56,69);
+    Font  defaultFont = new Font("IBM 3270",Font.PLAIN, 12);
+    Color Gunmetal =    new Color(32,44,57);
+    Color Charcoal =    new Color(40,56,69);
+    Color LCharcoal =   new Color(52,73,91);
     Color PacificBlue = new Color(8,164,189);
-    Color RedRYB = new Color(255,51,31);
-    Color Platinum = new Color(235,235,235);
+    Color RedRYB =      new Color(255,51,31);
+    Color Platinum =    new Color(235,235,235);
+    Color SpringGreen = new Color(50,232,117);
+
+    public DrawGame(int gameStatus, String windowLabel){
+        //Starts the GUI
+        super(windowLabel);
+        screen = getContentPane();
+        screen.setLayout(null);
+        screen.setBackground(Gunmetal);
+
+        gridPos = new JButton[10][10];
+
+        if(gameStatus == 1){
+            GameStartHandler(screen);
+        }else{
+            DrawGameCycle(screen);
+        }
+        setVisible(true);
+        setLocationRelativeTo(null);
+    }
+
+    public void run() {
+        try{
+
+        }catch(Exception e){
+            System.out.println("Exception is caught");
+        }
+        
+    }
 
     private void DrawButton(int x, int y, int i,Container scr, Color color, String buttonLabel){
         for(int a = 0; a < 10; a++){
@@ -36,7 +64,20 @@ public class DrawGame extends JFrame{
             }else{
                 gridPos[i][a].setForeground(Gunmetal);
             }
-            gridPos[i][a].setBackground(color);
+            if((i % 2) == 0){
+                if((a % 2) == 0){
+                    gridPos[i][a].setBackground(color);
+                }else{
+                    gridPos[i][a].setBackground(LCharcoal);
+                }
+            }else{
+                if((a % 2) != 0){
+                    gridPos[i][a].setBackground(color);
+                }else{
+                    gridPos[i][a].setBackground(LCharcoal);
+                }
+            }
+
 
             x = x + 55;
         }
@@ -64,8 +105,28 @@ public class DrawGame extends JFrame{
         }
     }
 
+    private void GridHandler(){
+        for(int i = 0; i < 10; i++){
+            for(int j = 0; j < 10; j++){
+                String hello = "Pressed " + Integer.toString(i) + " " + Integer.toString(j);
+                int x = i;
+                int y = j;
+                gridPos[i][j].addActionListener(
+                    new ActionListener(){
+                        public void actionPerformed(ActionEvent e){
+                            gridPos[x][y].setForeground(Charcoal);
+                            gridPos[x][y].setBackground(SpringGreen);
+                            System.out.println(hello);
+                        }
+                    }
+                );
+            }    
+        }
+    }
+
     void DrawGameStart(Container scr){
         setSize(625,700);
+
         final List<String> strings = new ArrayList<String>();
         String[] shipList = new String[]{"Porta-avião", "Submarino", "Navio de Escolta", "Caça"};
         strings.addAll(Arrays.asList(shipList));
@@ -89,13 +150,14 @@ public class DrawGame extends JFrame{
         DrawButton(40, 500, 8, screen, Charcoal, "I");
         DrawButton(40, 555, 9, screen, Charcoal, "J");
 
-        JButton newGame = new JButton("Iniciar Jogo");               newGame.setBounds(40, 620, 100, 25);      scr.add(newGame); newGame.setFont(defaultFont); newGame.setBackground(Charcoal); newGame.setForeground(Platinum);
+        newGame = new JButton("Iniciar Jogo");               newGame.setBounds(40, 620, 100, 25);      scr.add(newGame); newGame.setFont(defaultFont); newGame.setBackground(Charcoal); newGame.setForeground(Platinum);
         JTextField score = new JTextField("Selecione suas Peças!");  score.setBounds( 145, 620, 335, 25);      scr.add(score); score.setEditable(false); score.setFont(defaultFont); score.setBackground(Charcoal); score.setForeground(Platinum);
         JButton restartGame = new JButton("Reiniciar Jogo");         restartGame.setBounds(485, 620, 100, 25); scr.add(restartGame); restartGame.setFont(defaultFont); restartGame.setBackground(Charcoal); restartGame.setForeground(Platinum);
     }
 
     void DrawGameCycle(Container scr){
         setSize(760,700);
+
         JTextField score = new JTextField("Pontuação");  score.setBounds(40, 5, 545, 30);      scr.add(score); score.setEditable(false); score.setFont(defaultFont); 
         score.setBackground(Charcoal); score.setForeground(Platinum);
 
@@ -126,18 +188,22 @@ public class DrawGame extends JFrame{
 
     }
 
-    public DrawGame(int gameStatus, String windowLabel){
-        //Starts the GUI
-        super(windowLabel);
-    
-        screen = getContentPane();
-        screen.setLayout(null);
-        screen.setBackground(Gunmetal);
+    void GameStartHandler(Container screen){
+        JButton newGame = new JButton();
+        DrawGameStart(screen);
+        int i = 0;
+        int j = 0;
         
-        gridPos = new JButton[10][10];
-        //DrawGameStart(screen);
+        newGame.addActionListener(
+            new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    System.out.println("new game");
+                }
+            }
+        );
+        
+    }
+    void GamePlayHandler(Container screen){
         DrawGameCycle(screen);
-        setVisible(true);
-        setLocationRelativeTo(null);
     }
 }
