@@ -1,4 +1,4 @@
-public class Ship {
+public abstract class Ship{
     String Nome;
     short TAM;
     int coordX[];
