@@ -22,6 +22,7 @@ public class DrawGame extends JFrame {
     private JRadioButton randomGame;
 
     private Player placeholder;
+    public  Player returnPlayer;
 
     Font  defaultFont = new Font("IBM 3270",Font.PLAIN, 12);
     Color Gunmetal =    new Color(32,44,57);
@@ -177,14 +178,17 @@ public class DrawGame extends JFrame {
                             case 0:
                                 System.out.println("Jogador V Jogador");
                                 mode[0] = 1;
+                                dispose(); 
                                 break;
                             case 1:
                                 System.out.println("Jogador V CPU");
                                 mode[0] = 2;
+                                dispose(); 
                                 break;
                             case 2:
                                 System.out.println("CPU V CPU");
                                 mode[0] = 3;
+                                dispose(); 
                                 break;
                         }
                         
@@ -231,6 +235,7 @@ public class DrawGame extends JFrame {
             new ActionListener(){
                 public void actionPerformed(ActionEvent e){
                     System.out.println("new game");
+                    System.out.println(placeholder);
                 }
             }
         );
@@ -270,8 +275,9 @@ public class DrawGame extends JFrame {
 
         score.addActionListener(
             new ActionListener(){
-                public void actionPerformed(ActionEvent e){
+                public void actionPerformed(ActionEvent ae){
                     placeholder.Nome = score.getText();
+                    System.out.println(placeholder.Nome);
                 }
             }
         );
@@ -557,8 +563,6 @@ public class DrawGame extends JFrame {
 
     }
 
-    public Player p;
-
     public DrawGame(int gameStatus, String windowLabel){
         //Starts the GUI
         super(windowLabel);
@@ -573,7 +577,7 @@ public class DrawGame extends JFrame {
                 StartMenu(screen);
                 break;
             case 2:
-                p = GameStartHandler(screen);
+                returnPlayer = GameStartHandler(screen);
                 break;
             case 3:
                 GamePlayHandler(screen);
