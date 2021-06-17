@@ -5,16 +5,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DrawGame extends JFrame implements Runnable {
+public class DrawGame extends JFrame {
     public        JButton[][] gridPos;
     public  final Container   screen;
     public       JButton     restartGame;
     public       JButton     newGame;
-    public       JButton[]   ship;
-    public       JComboBox   selector;
-    public       JTextField  score;
-    public       JLabel[]    HLabel;
-    public       JLabel[]    VLabel;
+    private       JButton[]   ship;
+    private       JComboBox   selector;
+    private       JTextField  score;
+    private       JLabel[]    HLabel;
+    private       JLabel[]    VLabel;
+
 
     Font  defaultFont = new Font("IBM 3270",Font.PLAIN, 12);
     Color Gunmetal =    new Color(32,44,57);
@@ -24,33 +25,6 @@ public class DrawGame extends JFrame implements Runnable {
     Color RedRYB =      new Color(255,51,31);
     Color Platinum =    new Color(235,235,235);
     Color SpringGreen = new Color(50,232,117);
-
-    public DrawGame(int gameStatus, String windowLabel){
-        //Starts the GUI
-        super(windowLabel);
-        screen = getContentPane();
-        screen.setLayout(null);
-        screen.setBackground(Gunmetal);
-
-        gridPos = new JButton[10][10];
-
-        if(gameStatus == 1){
-            GameStartHandler(screen);
-        }else{
-            DrawGameCycle(screen);
-        }
-        setVisible(true);
-        setLocationRelativeTo(null);
-    }
-
-    public void run() {
-        try{
-
-        }catch(Exception e){
-            System.out.println("Exception is caught");
-        }
-        
-    }
 
     private void DrawButton(int x, int y, int i,Container scr, Color color, String buttonLabel){
         for(int a = 0; a < 10; a++){
@@ -105,27 +79,9 @@ public class DrawGame extends JFrame implements Runnable {
         }
     }
 
-    private void GridHandler(){
-        for(int i = 0; i < 10; i++){
-            for(int j = 0; j < 10; j++){
-                String hello = "Pressed " + Integer.toString(i) + " " + Integer.toString(j);
-                int x = i;
-                int y = j;
-                gridPos[i][j].addActionListener(
-                    new ActionListener(){
-                        public void actionPerformed(ActionEvent e){
-                            gridPos[x][y].setForeground(Charcoal);
-                            gridPos[x][y].setBackground(SpringGreen);
-                            System.out.println(hello);
-                        }
-                    }
-                );
-            }    
-        }
-    }
-
     void DrawGameStart(Container scr){
         setSize(625,700);
+        gridPos = new JButton[10][10];
 
         final List<String> strings = new ArrayList<String>();
         String[] shipList = new String[]{"Porta-avião", "Submarino", "Navio de Escolta", "Caça"};
@@ -151,14 +107,15 @@ public class DrawGame extends JFrame implements Runnable {
         DrawButton(40, 555, 9, screen, Charcoal, "J");
 
         newGame = new JButton("Iniciar Jogo");               newGame.setBounds(40, 620, 100, 25);      scr.add(newGame); newGame.setFont(defaultFont); newGame.setBackground(Charcoal); newGame.setForeground(Platinum);
-        JTextField score = new JTextField("Selecione suas Peças!");  score.setBounds( 145, 620, 335, 25);      scr.add(score); score.setEditable(false); score.setFont(defaultFont); score.setBackground(Charcoal); score.setForeground(Platinum);
-        JButton restartGame = new JButton("Reiniciar Jogo");         restartGame.setBounds(485, 620, 100, 25); scr.add(restartGame); restartGame.setFont(defaultFont); restartGame.setBackground(Charcoal); restartGame.setForeground(Platinum);
+        score = new JTextField("Coloque Seu Nome!");  score.setBounds( 145, 620, 335, 25);      scr.add(score); score.setEditable(true); score.setFont(defaultFont); score.setBackground(Charcoal); score.setForeground(Platinum);
+        restartGame = new JButton("Reiniciar Jogo");         restartGame.setBounds(485, 620, 100, 25); scr.add(restartGame); restartGame.setFont(defaultFont); restartGame.setBackground(Charcoal); restartGame.setForeground(Platinum);
     }
 
     void DrawGameCycle(Container scr){
         setSize(760,700);
+        gridPos = new JButton[10][10];
 
-        JTextField score = new JTextField("Pontuação");  score.setBounds(40, 5, 545, 30);      scr.add(score); score.setEditable(false); score.setFont(defaultFont); 
+        score = new JTextField("Pontuação");  score.setBounds(40, 5, 545, 30);      scr.add(score); score.setEditable(false); score.setFont(defaultFont); 
         score.setBackground(Charcoal); score.setForeground(Platinum);
 
         HLabel = new JLabel[10];
@@ -183,16 +140,17 @@ public class DrawGame extends JFrame implements Runnable {
         ship[2] = new JButton("Navio de Escolta"); ship[2].setBounds(590,340,150,25); scr.add(ship[2]);
         ship[3] = new JButton("Caça");             ship[3].setBounds(590,375,150,25); scr.add(ship[3]);
 
-        JButton newGame = new JButton("Novo Jogo");               newGame.setBounds(40, 620, 100, 25);      scr.add(newGame); newGame.setFont(defaultFont); newGame.setBackground(Charcoal); newGame.setForeground(Platinum);
-        JButton restartGame = new JButton("Reiniciar Jogo");         restartGame.setBounds(485, 620, 100, 25); scr.add(restartGame); restartGame.setFont(defaultFont); restartGame.setBackground(Charcoal); restartGame.setForeground(Platinum);
+        newGame = new JButton("Novo Jogo");               newGame.setBounds(40, 620, 100, 25);      scr.add(newGame); newGame.setFont(defaultFont); newGame.setBackground(Charcoal); newGame.setForeground(Platinum);
+        restartGame = new JButton("Reiniciar Jogo");         restartGame.setBounds(485, 620, 100, 25); scr.add(restartGame); restartGame.setFont(defaultFont); restartGame.setBackground(Charcoal); restartGame.setForeground(Platinum);
 
     }
 
+    int op;
     void GameStartHandler(Container screen){
-        JButton newGame = new JButton();
         DrawGameStart(screen);
         int i = 0;
         int j = 0;
+        int[] selShip = {0,0,0,0};
         
         newGame.addActionListener(
             new ActionListener(){
@@ -201,9 +159,100 @@ public class DrawGame extends JFrame implements Runnable {
                 }
             }
         );
+
+        restartGame.addActionListener(
+            new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    System.out.println("restart");
+                }
+            }
+        );
+
+        
+        selector.addActionListener(
+            new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    System.out.println(selector.getSelectedItem());
+                    op = selector.getSelectedIndex();
+                    if(selShip[op] == 1){
+                        JOptionPane.showMessageDialog(screen, "»Peça já posicionada");
+                    }
+                }
+        
+            }
+        );
+        
+        for(i = 0; i < 10; i++){
+            for(j = 0; j < 10; j++){
+                String hello = "Pressed " + Integer.toString(i) + " " + Integer.toString(j);
+                int x = i;
+                int y = j;
+                gridPos[i][j].addActionListener(
+                    new ActionListener(){
+                        public void actionPerformed(ActionEvent e){
+                            switch(op){
+                                case 1:
+                                    if(selShip[op] == 0){
+                                        for(int k = 0; k < 3; k++){
+                                            gridPos[x][y + k].setForeground(Charcoal);
+                                            gridPos[x][y + k].setBackground(SpringGreen);
+                                        }
+                                        selShip[0] = 1;
+                                    }
+                                    break;
+                                case 2:
+                                    if(selShip[op] == 0){
+                                        for(int k = 0; k < 1; k++){
+                                            gridPos[x][y + k].setForeground(Charcoal);
+                                            gridPos[x][y + k].setBackground(SpringGreen);
+                                        }
+                                        selShip[1] = 1;
+                                    }
+                                    break;
+                                case 3:
+                                    if(selShip[op] == 0){
+                                        for(int k = 0; k < 2; k++){
+                                            gridPos[x][y + k].setForeground(Charcoal);
+                                            gridPos[x][y + k].setBackground(SpringGreen);
+                                        }
+                                        selShip[2] = 1;
+                                    }
+                                    break;
+                                case 4:
+                                    if(selShip[op] == 0){
+                                        for(int k = 0; k < 1; k++){
+                                            gridPos[x][y + k].setForeground(Charcoal);
+                                            gridPos[x][y + k].setBackground(SpringGreen);
+                                        }
+                                        selShip[3] = 1;
+                                    }
+                                    break;
+                            }
+                            System.out.println(hello);
+                        }
+                    }
+                );
+            }    
+        }
         
     }
     void GamePlayHandler(Container screen){
         DrawGameCycle(screen);
+    }
+
+    public DrawGame(int gameStatus, String windowLabel){
+        //Starts the GUI
+        super(windowLabel);
+        screen = getContentPane();
+        screen.setLayout(null);
+        screen.setBackground(Gunmetal);
+
+        if(gameStatus == 1){
+            GameStartHandler(screen);
+        }else{
+            DrawGameCycle(screen);
+        }
+        setVisible(true);
+        setLocationRelativeTo(null);
     }
 }
