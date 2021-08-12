@@ -1,4 +1,4 @@
-## Getting Started
+## Informações básicas
 
 Este é um repositório dedicado á minha versão do jogo de Batalha naval, foi feito em java usando Swing para sua interface
 
